@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -c -Wall -Wextra -Wwrite-strings
-LFLAGS=-g -o
+LFLAGS=-g
 TARGET = 1743A
 
 ${TARGET}: 1743A.o dict.o
