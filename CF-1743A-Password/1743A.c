@@ -108,7 +108,7 @@ void GUP_helper(struct pydict* dict,
 }
 
 int main(void) {
-    char initStr[] = "aabbcc";
+    char initStr[] = "aabb";
     int count = 0;
 
     char **permsList = gen_unique_perms(initStr, &count);
