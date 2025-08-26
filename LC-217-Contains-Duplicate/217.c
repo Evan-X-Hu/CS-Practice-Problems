@@ -5,6 +5,7 @@
 // We are using size_t since it is guaranteed to be large enough to hold the largest possible object
 int* convertToIntArr(char* str, int size);
 void printArray(int* arr, int n);
+int containsDuplicates(int* arr, int n);
 
 
 int main(void) {
@@ -24,7 +25,7 @@ int main(void) {
     
     // Retrieve input
     while((nread = getline(&buffer, &bufsize, stdin)) != -1) {
-        fprintf(stdout, "num read: %d\n", nread);
+        // fprintf(stdout, "num read: %d\n", nread);
         // Must adjust for the line break, decrement the nread by 1, actually safer to store
         // the size in a new variable
         len = nread - 1;
@@ -37,8 +38,18 @@ int main(void) {
     // I'll just do this myself
     numsArr = convertToIntArr(buffer, len);
 
-    fprintf(stderr, "TEST1: Printing the int array\n");
-    printArray(numsArr, len);
+    //fprintf(stderr, "TEST1: Printing the int array\n");
+    //printArray(numsArr, len);
+
+    // Now peform the algorith to check for duplicate numbers given the array and the len
+    int containsDups = containsDuplicates(numsArr, len);
+    //fprintf(stdout,"TEST containsDups: %d\n", containsDups);
+
+    if(containsDups == 1) {
+        fprintf(stdout, "Duplicates found\n");
+    } else {
+        fprintf(stdout, "Duplicates not found\n");
+    }
 
     free(buffer); // Must free buffer since getline allocates this in the background
     free(numsArr);
@@ -52,7 +63,7 @@ int* convertToIntArr(char* str, int size) {
     // Iterate through all the characters in string
     int i = 0; // track index
     while(*str != '\0') { // While we are not at the NULL pointer terminator of the str
-        fprintf(stdout, "TEST\n");
+        //fprintf(stdout, "TEST\n");
         arr[i] = *str - 48; // Add it to the int array
         i++;
         str++;
@@ -63,8 +74,32 @@ int* convertToIntArr(char* str, int size) {
 
 // Code pasted from ChatGPT, I got lazy, it happens
 void printArray(int* arr, int n) {
-    for (int i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++) {
         printf("%d ", arr[i]);
     }
     printf("\n");
+}
+
+// Returns 1 for true and 0 for false
+int containsDuplicates(int* arr, int n) {
+    // First lets initialize our short 16 bit data structure
+    short checker = 0; // Starts at 0000 0000 0000 0000
+    // Now iterate through each element in the arr
+    for(int i=0; i < n; i++) {
+        // Shift a 1 over 0-9 times depending on our value
+        short cur = 1 << arr[i];
+        // fprintf(stdout, "TEST CHECKER: %d\n", checker);
+        // fprintf(stdout, "TEST CUR: %d\n", cur);
+        // fprintf(stdout, "TEST CUR & CHECKER: %d\n", cur & checker);
+       
+        // Now check with the checker if that value is already a 1
+        // Do this by using a logical & and if it isn't 0 then that means there was a duplicate
+        if((checker & cur) != 0) { 
+            // fprintf(stdout,"TEST\n");
+            return 1;}
+        // Now update the checker
+        checker = checker | cur;
+    }
+    // fprintf(stdout,"TEST\n");
+    return 0; // we didn't find a duplicate
 }
