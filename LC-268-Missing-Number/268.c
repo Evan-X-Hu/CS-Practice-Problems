@@ -38,6 +38,7 @@ int main(void) {
     fprintf(stdout, "Missing numbers:\n");
     //printArray(missingNums, len);
     printList(missingNums);
+    fprintf(stdout,"\n");
 
 }
 
@@ -96,7 +97,9 @@ int findMissingNum(int* numArr, int len) {
 
 Node* findMissingNums(int* numArr, int len) {
     // /fprintf(stdout, "TEST: %d\n", len);
-    Node* resultLL; // we dont need to try to create a node with a null value
+    Node* resultLL = NULL; // we dont need to try to create a node with a null value
+    // MUST INITIALIZE TO NULL OTHERWIZE WE TRY TO ACCESS A RANDOM POINT IN MEMORY
+    // ALWAYS LEADS TO A SEG FAULT
     // The append function handles when we aren't pointing to anything
     // First initialize an empty array of size len
     int numsMap[len+1];
@@ -125,19 +128,19 @@ Node* findMissingNums(int* numArr, int len) {
     // I mean this is a better and faster solution then sorting the array and looking for a jump
 
     // Iterate through the map and return the index with a 0, if all 1, then we return len
-    for(int i=1; i<=len; i++) {
-        fprintf(stdout, "TEST: %d\n", i);
-        fprintf(stdout, "TEST numsmap[i]: %d\n", numsMap[i]);
+    for(int i=0; i<=len; i++) {
+        // fprintf(stdout, "TEST: %d\n", i);
+        // fprintf(stdout, "TEST numsmap[i]: %d\n", numsMap[i]);
 
         if(numsMap[i] == 0) {
             // This number was skipped so add to the result linked list
             // resultArr[i-1] = i;
-            appendNode(&resultLL, i);
+            appendNode(&resultLL, i+1);
         }
         // The problem is we need a way to append numbers to the end of the resultArr
         // Basically have this function as a linked list
     }
-
+    //fprintf(stdout, "TEST: NO SEG FAULTS IN findMissingNums\n");
     return resultLL;
     // In C we can't return pointers to local variables because once the function returns
     // That space used for the local variable will be cleared and then the pointer will point to nothing
