@@ -33,7 +33,38 @@ void smallerNums1(int* intArr, int size) {
     // For now lets just sort and print to test the sorting algorithm
     sortArr(intArr, size);
 
-    printArray(intArr, size);
+    printArray(intArr, size); // WORKS!!!
+
+    typedef struct entry { // each entry must have the occ and the res string
+        int occs;
+        char* resStr;
+    } entry;
+
+    entry map[size];
+    char res[size];
+
+    for (int i=0; i<size; i++) {
+        map[i].occs = 0;
+        map[i].resStr = NULL;
+    }
+
+    for (int i=0; i<size; i++) {
+        int val = intArr[i];
+        map[val].occs += 1;
+        if (map[val].resStr == NULL) { // String not set
+            map[val].resStr = malloc(size * 2);
+            sprintf(map[val].resStr, "%s,", res);
+        }
+        // Append the number to the res
+        res[i] = val;
+    }
+
+    // Now we have our answer, loop through the map and print it all out
+    for (int i=0; i<size; i++) {
+        if(map[i].occs > 0) { //only print numbers that had others less
+            fprintf(stdout, "Num: %d #Less: %d (%s)\n", i, map[i].occs, map[i].resStr);
+        }
+    }
 
     return;
 }
@@ -45,6 +76,8 @@ void smallerNums1(int* intArr, int size) {
    Then, we would loop through the map and add each digit for the number of occurences
    This would require a nested loop but it is not O(n^2) because we only hit each element
    of the originial array twice
+
+   NOTE: this sort only works for numbers 0-9 for largers numbers we would need a larger map
  */
 void sortArr(int* arr, int size) {
     int map[10]; // since there are 10 digits 0-9
@@ -69,6 +102,8 @@ void sortArr(int* arr, int size) {
     return;
 }
 
+// NOTE: the convertToIntArr is only converting single digit ints.
+// I will make functions to improve this after solving this problem
 int* convertToIntArr(char* str, int size) {
     int* arr = malloc(size * sizeof(int));
     if (!arr) return NULL; // check malloc for failures or NULL returns
